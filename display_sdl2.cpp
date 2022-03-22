@@ -33,7 +33,7 @@ void get_sdl_hwinfo_from_sdl_window(SDL_Window* window)
 		return;
 	}
 	const char *subsystem = "an unsupported or unknown system!";
-	switch(m_sdlwminfo.subsystem)
+	switch((int)m_sdlwminfo.subsystem)
 	{
 		case SDL_SYSWM_UNKNOWN:
 		case SDL_SYSWM_COCOA:
@@ -51,8 +51,12 @@ void get_sdl_hwinfo_from_sdl_window(SDL_Window* window)
 #if SDL_VERSION_ATLEAST(2, 0, 5)
 		case SDL_SYSWM_VIVANTE:
 #endif
+#if SDL_VERSION_ATLEAST(2, 0, 6)
 		case SDL_SYSWM_OS2:
+#endif
+#if SDL_VERSION_ATLEAST(2, 0, 12)
 		case SDL_SYSWM_HAIKU:
+#endif
 		case SDL_SYSWM_DIRECTFB:
 			break;
 		case SDL_SYSWM_WINDOWS:
@@ -149,7 +153,7 @@ bool sdl2_display::init(void* pf_data)
 	/*
 	// Alternative method, only when the render has been created
 	if( SDL_GL_GetCurrentWindow() !=  NULL)
-		log_verbose("Swithres/SDL2: (%s) SDL_GL_GetCurrentWindow(); OK !\n", __FUNCTION__);
+	    log_verbose("Swithres/SDL2: (%s) SDL_GL_GetCurrentWindow(); OK !\n", __FUNCTION__);
 	*/
 	if (pf_data == nullptr or pf_data == NULL)
 	{
