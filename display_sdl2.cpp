@@ -92,13 +92,13 @@ sdl2_display::sdl2_display(display_settings *ds)
 	else
 	{
 		log_verbose("Switchres/SDL2: (%s): SDL2 video wasn't initialized\n", __FUNCTION__);
-		throw new std::exception();
+		throw std::exception();
 	}
 	// For now, only allow the SDL2 display manager for the KMSDRM backend
 	if ( strcmp("KMSDRM", SDL_GetCurrentVideoDriver()) != 0 )
 	{
 		log_info("Switchres/SDL2: (%s): SDL2 is only available for KMSDRM for now.\n", __FUNCTION__);
-		throw new std::exception();
+		throw std::exception();
 	}
 
 	// Get display settings
@@ -200,8 +200,8 @@ bool sdl2_display::set_mode(modeline *mode)
 {
 	// Call SDL2
 	SDL_DisplayMode target, closest;
-	target.w = mode->hactive;
-	target.h = mode->vactive;
+	target.w = mode->width;
+	target.h = mode->height;
 	target.format = 0;  // don't care
 	target.refresh_rate = mode->refresh;
 
@@ -279,7 +279,7 @@ int sdl2_display::get_available_video_modes()
 
 		// get next mode
 		video()->get_timing(&mode);
-		if (mode.type == 0 || mode.platform_data == 0)
+		if (mode.type == 0)
 			break;
 
 		// set the desktop mode

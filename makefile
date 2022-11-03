@@ -3,6 +3,7 @@ PLATFORM := $(shell uname)
 MAIN = switchres_main
 STANDALONE = switchres
 TARGET_LIB = libswitchres
+DRMHOOK_LIB = libdrmhook
 GRID = grid
 SRC = monitor.cpp modeline.cpp switchres.cpp display.cpp custom_video.cpp log.cpp switchres_wrapper.cpp edid.cpp
 OBJS = $(SRC:.cpp=.o)
@@ -78,7 +79,8 @@ DYNAMIC_LIB_EXT = so
 # Windows
 else ifneq (,$(findstring NT,$(PLATFORM)))
 SRC += display_windows.cpp custom_video_ati_family.cpp custom_video_ati.cpp custom_video_adl.cpp custom_video_pstrip.cpp resync_windows.cpp
-CPPFLAGS += -static -static-libgcc -static-libstdc++
+WIN_ONLY_FLAGS = -static-libgcc -static-libstdc++
+CPPFLAGS += -static $(WIN_ONLY_FLAGS)
 LIBS =
 #REMOVE = del /f
 REMOVE = rm -f
@@ -112,8 +114,11 @@ $(TARGET_LIB): $(OBJS)
 	$(FINAL_CXX) -c $(CPPFLAGS) -DSR_WIN32_STATIC switchres_wrapper.cpp -o switchres_wrapper.o
 	$(FINAL_AR) rcs $@.$(STATIC_LIB_EXT) $(^)
 
+$(DRMHOOK_LIB):
+	$(FINAL_CXX) drm_hook.cpp -shared -ldl -fPIC -I/usr/include/libdrm  -o libdrmhook.so
+
 $(GRID):
-	$(FINAL_CXX) grid.cpp -lSDL2 -o grid
+	$(FINAL_CXX) grid.cpp $(WIN_ONLY_FLAGS) -lSDL2 -lSDL2_ttf -o grid
 
 clean:
 	$(REMOVE) $(OBJS) $(STANDALONE) $(TARGET_LIB).*

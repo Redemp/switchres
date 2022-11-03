@@ -114,6 +114,9 @@ typedef struct generator_settings
 	double   monitor_aspect;
 	double   refresh_tolerance;
 	int      super_width;
+	double   h_size;
+	int      h_shift;
+	int      v_shift;
 	int      v_shift_correct;
 	int      pixel_precision;
 	int      interlace_force_even;
@@ -130,9 +133,12 @@ char * modeline_result(modeline *mode, char *result);
 int modeline_vesa_gtf(modeline *m);
 int modeline_parse(const char *user_modeline, modeline *mode);
 int modeline_to_monitor_range(monitor_range *range, modeline *mode);
+int modeline_adjust(modeline *mode, double hfreq_max, generator_settings *cs);
 int modeline_is_different(modeline *n, modeline *p);
 
 int round_near(double number);
+int round_near_odd(double number);
+int round_near_even(double number);
 int normalize(int a, int b);
 int real_res(int x);
 
